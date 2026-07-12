@@ -36,7 +36,18 @@ body {
   shell instead of drawing a pink rectangle around it.
 */
 .controller.ds4.white {
-  position: relative;
+  /*
+    Match GamePad Viewer's original controller positioning.
+    The previous position: relative rule caused the controller
+    to be offset and cropped.
+  */
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  margin-top: 30px !important;
+  margin-left: 0 !important;
+
   isolation: isolate;
 
   background-image:
