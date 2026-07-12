@@ -1,23 +1,24 @@
 /*
   Pastel PS4 / DualShock 4 skin for GamePad Viewer
 
-  Colors:
-    Faceplate:   light pink  #F7C6D9
-    Face buttons: white      #FFFFFF
-    Thumbsticks: powder blue #B6E3F4
-    D-pad:        black      #111111
+  Use with:
+  - Skin: PlayStation 4 (White)
+  - Edit CSS URL: this hosted file
 
-  Use this file as an Edit CSS URL with the PlayStation 4 White skin.
+  Colors:
+  - Faceplate: light pink
+  - Face buttons: white
+  - Thumbsticks: powder blue
+  - D-pad: black
 */
 
 :root {
-  --ps4-faceplate-pink: #ffffff;
-  --ps4-button-white: #ffffff;
-  --ps4-stick-blue: #b6e3f4;
-  --ps4-stick-blue-light: #d8f2fb;
-  --ps4-stick-blue-dark: #629caf;
-  --ps4-dpad-black: #111111;
-  --ps4-control-outline: rgba(0, 0, 0, 0.28);
+  --faceplate-pink: #f7c6d9;
+  --button-white: #ffffff;
+  --stick-blue: #b6e3f4;
+  --stick-blue-light: #dff5fc;
+  --stick-blue-dark: #629caf;
+  --dpad-black: #111111;
 }
 
 html,
@@ -26,66 +27,86 @@ body {
 }
 
 /*
-  GamePad Viewer applies the .edit class to the selected controller.
-  Both selector forms are included for compatibility with the classic
-  and beta-generated viewer URLs.
+  IMPORTANT:
+  GamePad Viewer keeps the controller classes as:
+  .controller.ds4.white
+
+  This uses the same known-working hosted base asset as the
+  PurpleWhiteSkin. A mask recolors only the visible controller
+  shell instead of drawing a pink rectangle around it.
 */
-.controller.ds4.edit,
-.edit .controller.ds4 {
+.controller.ds4.white {
   position: relative;
   isolation: isolate;
-  background-image: url("https://gamepadviewer.com/ps4-white-assets/base.svgz") !important;
+
+  background-image:
+    url("https://uncleclapton.github.io/GamepadViewer-PurpleWhiteSkin/svgs/base.svgz") !important;
   background-repeat: no-repeat !important;
   background-position: 0 0 !important;
   background-size: 806px 598px !important;
 }
 
-/*
-  Tint only the opaque controller shell. The mask prevents a pink
-  rectangle from appearing around the controller, while multiply keeps
-  the original highlights, shadows, touchpad, and dark details.
-*/
-.controller.ds4.edit::before,
-.edit .controller.ds4::before {
+.controller.ds4.white::before {
   content: "";
   position: absolute;
   inset: 0;
+  z-index: 0;
+
   width: 806px;
   height: 598px;
+
   pointer-events: none;
-  background: var(--ps4-faceplate-pink);
-  mix-blend-mode: multiply;
-  opacity: 0.98;
-  -webkit-mask-image: url("https://gamepadviewer.com/ps4-white-assets/base.svgz");
+  background: var(--faceplate-pink);
+  mix-blend-mode: color;
+
+  -webkit-mask-image:
+    url("https://uncleclapton.github.io/GamepadViewer-PurpleWhiteSkin/svgs/base.svgz");
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-position: 0 0;
   -webkit-mask-size: 806px 598px;
-  mask-image: url("https://gamepadviewer.com/ps4-white-assets/base.svgz");
+
+  mask-image:
+    url("https://uncleclapton.github.io/GamepadViewer-PurpleWhiteSkin/svgs/base.svgz");
   mask-repeat: no-repeat;
   mask-position: 0 0;
   mask-size: 806px 598px;
 }
 
-/* -------------------------
-   White face buttons
-   ------------------------- */
-.controller.ds4.edit .button,
-.edit .controller.ds4 .button {
+/* Keep all interactive controller parts above the pink shell tint. */
+.controller.ds4.white > div {
+  z-index: 1;
+}
+
+/* Keep the controller visible when connected. */
+.controller.ds4.white:not(.disconnected) {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* =========================================================
+   WHITE FACE BUTTONS
+   ========================================================= */
+
+.ds4.white .button {
   box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: visible;
+
   border: 3px solid rgba(0, 0, 0, 0.18);
   border-radius: 50%;
-  background: var(--ps4-button-white) !important;
+
+  background: var(--button-white) !important;
   background-image: none !important;
-  color: #1a1a1a;
+
+  color: #202020;
   font-family: Arial, Helvetica, sans-serif;
   font-weight: 700;
   line-height: 1;
   text-align: center;
   text-shadow: none;
+
   box-shadow:
     0 4px 0 rgba(0, 0, 0, 0.22),
     0 7px 12px rgba(0, 0, 0, 0.22),
@@ -93,204 +114,223 @@ body {
     inset 0 -4px 6px rgba(0, 0, 0, 0.10);
 }
 
-.controller.ds4.edit .button::after,
-.edit .controller.ds4 .button::after {
+.ds4.white .button::after {
   display: block;
   width: 100%;
-  color: #222222;
+  color: #202020;
   font-weight: 700;
   line-height: 1;
   text-align: center;
 }
 
-/* GamePad Viewer mapping: A = Cross, B = Circle, X = Square, Y = Triangle. */
-.controller.ds4.edit .button.a::after,
-.edit .controller.ds4 .button.a::after {
+/* A = Cross, B = Circle, X = Square, Y = Triangle */
+.ds4.white .button.a::after {
   content: "✕";
   font-size: 31px;
 }
 
-.controller.ds4.edit .button.b::after,
-.edit .controller.ds4 .button.b::after {
+.ds4.white .button.b::after {
   content: "○";
   font-size: 37px;
   transform: translateY(-1px);
 }
 
-.controller.ds4.edit .button.x::after,
-.edit .controller.ds4 .button.x::after {
+.ds4.white .button.x::after {
   content: "□";
   font-size: 34px;
   transform: translateY(-1px);
 }
 
-.controller.ds4.edit .button.y::after,
-.edit .controller.ds4 .button.y::after {
+.ds4.white .button.y::after {
   content: "△";
   font-size: 37px;
   transform: translateY(-2px);
 }
 
-.controller.ds4.edit .button.pressed,
-.edit .controller.ds4 .button.pressed {
+.ds4.white .button.pressed {
   border-color: rgba(0, 0, 0, 0.24);
   background: #eefaff !important;
   background-image: none !important;
+
   box-shadow:
     0 1px 0 rgba(0, 0, 0, 0.28),
     0 0 15px rgba(255, 255, 255, 0.95),
     inset 0 4px 8px rgba(0, 0, 0, 0.18);
 }
 
-/* -------------------------
-   Powder-blue thumbsticks
-   ------------------------- */
-.controller.ds4.edit .stick,
-.edit .controller.ds4 .stick {
+/* =========================================================
+   POWDER-BLUE THUMBSTICKS
+   ========================================================= */
+
+.ds4.white .stick {
   border-radius: 50%;
+
   background-color: transparent !important;
   background-image:
-    radial-gradient(circle at 50% 36%, rgba(255, 255, 255, 0.85) 0 7%, transparent 8%),
+    radial-gradient(
+      circle at 50% 36%,
+      rgba(255, 255, 255, 0.90) 0 7%,
+      transparent 8%
+    ),
     radial-gradient(
       circle at center,
-      var(--ps4-stick-blue-light) 0 17%,
-      var(--ps4-stick-blue) 18% 54%,
+      var(--stick-blue-light) 0 17%,
+      var(--stick-blue) 18% 54%,
       #91cddd 55% 67%,
-      var(--ps4-stick-blue-dark) 68% 75%,
+      var(--stick-blue-dark) 68% 75%,
       transparent 76%
     ) !important;
+
   background-repeat: no-repeat !important;
   background-position: center !important;
   background-size: 100% 100% !important;
+
   box-shadow:
     0 5px 9px rgba(0, 0, 0, 0.32),
     inset 0 5px 7px rgba(255, 255, 255, 0.62),
     inset 0 -6px 8px rgba(32, 92, 112, 0.32);
 }
 
-.controller.ds4.edit .stick.pressed,
-.edit .controller.ds4 .stick.pressed {
+.ds4.white .stick.pressed {
   filter: brightness(0.88);
+
   box-shadow:
     0 2px 5px rgba(0, 0, 0, 0.34),
     0 0 13px rgba(182, 227, 244, 0.85),
     inset 0 7px 11px rgba(30, 83, 99, 0.40);
 }
 
-/* -------------------------
-   Black D-pad
-   ------------------------- */
-.controller.ds4.edit .dpad,
-.edit .controller.ds4 .dpad {
+/* =========================================================
+   BLACK D-PAD
+   ========================================================= */
+
+.ds4.white .dpad {
   isolation: isolate;
 }
 
-/* Vertical section of the connected cross. */
-.controller.ds4.edit .dpad::before,
-.edit .controller.ds4 .dpad::before {
+/* Vertical part of the D-pad cross */
+.ds4.white .dpad::before {
   content: "";
   position: absolute;
   top: 0;
   left: 44px;
   z-index: 0;
+
   width: 36px;
   height: 126px;
+  box-sizing: border-box;
+
   border: 2px solid rgba(255, 255, 255, 0.07);
   border-radius: 8px;
-  box-sizing: border-box;
-  background: linear-gradient(145deg, #292929 0%, var(--ps4-dpad-black) 48%, #050505 100%);
+
+  background:
+    linear-gradient(
+      145deg,
+      #292929 0%,
+      var(--dpad-black) 48%,
+      #050505 100%
+    );
+
   box-shadow:
     0 5px 8px rgba(0, 0, 0, 0.42),
     inset 0 3px 4px rgba(255, 255, 255, 0.08),
     inset 0 -4px 5px rgba(0, 0, 0, 0.65);
 }
 
-/* Horizontal section of the connected cross. */
-.controller.ds4.edit .dpad::after,
-.edit .controller.ds4 .dpad::after {
+/* Horizontal part of the D-pad cross */
+.ds4.white .dpad::after {
   content: "";
   position: absolute;
   top: 45px;
   left: 0;
   z-index: 0;
+
   width: 125px;
   height: 36px;
+  box-sizing: border-box;
+
   border: 2px solid rgba(255, 255, 255, 0.07);
   border-radius: 8px;
-  box-sizing: border-box;
-  background: linear-gradient(145deg, #292929 0%, var(--ps4-dpad-black) 48%, #050505 100%);
+
+  background:
+    linear-gradient(
+      145deg,
+      #292929 0%,
+      var(--dpad-black) 48%,
+      #050505 100%
+    );
+
   box-shadow:
     0 5px 8px rgba(0, 0, 0, 0.42),
     inset 0 3px 4px rgba(255, 255, 255, 0.08),
     inset 0 -4px 5px rgba(0, 0, 0, 0.65);
 }
 
-.controller.ds4.edit .dpad .face,
-.edit .controller.ds4 .dpad .face {
+.ds4.white .dpad .face {
   z-index: 1;
   box-sizing: border-box;
   border-radius: 7px;
+
   background: transparent !important;
   background-image: none !important;
   box-shadow: none;
 }
 
-.controller.ds4.edit .dpad .face::after,
-.edit .controller.ds4 .dpad .face::after {
+.ds4.white .dpad .face::after {
   content: "";
   position: absolute;
   width: 0;
   height: 0;
   opacity: 0.62;
+
   filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.10));
 }
 
-.controller.ds4.edit .dpad .face.up::after,
-.edit .controller.ds4 .dpad .face.up::after {
+.ds4.white .dpad .face.up::after {
   top: 12px;
   left: 12px;
+
   border-right: 6px solid transparent;
   border-bottom: 9px solid #777777;
   border-left: 6px solid transparent;
 }
 
-.controller.ds4.edit .dpad .face.down::after,
-.edit .controller.ds4 .dpad .face.down::after {
+.ds4.white .dpad .face.down::after {
   bottom: 12px;
   left: 12px;
+
   border-top: 9px solid #777777;
   border-right: 6px solid transparent;
   border-left: 6px solid transparent;
 }
 
-.controller.ds4.edit .dpad .face.left::after,
-.edit .controller.ds4 .dpad .face.left::after {
+.ds4.white .dpad .face.left::after {
   top: 12px;
   left: 11px;
+
   border-top: 6px solid transparent;
   border-right: 9px solid #777777;
   border-bottom: 6px solid transparent;
 }
 
-.controller.ds4.edit .dpad .face.right::after,
-.edit .controller.ds4 .dpad .face.right::after {
+.ds4.white .dpad .face.right::after {
   top: 12px;
   right: 11px;
+
   border-top: 6px solid transparent;
   border-bottom: 6px solid transparent;
   border-left: 9px solid #777777;
 }
 
-.controller.ds4.edit .dpad .face.pressed,
-.edit .controller.ds4 .dpad .face.pressed {
+.ds4.white .dpad .face.pressed {
   background: rgba(255, 255, 255, 0.20) !important;
   background-image: none !important;
+
   box-shadow:
     inset 0 4px 8px rgba(0, 0, 0, 0.68),
     0 0 10px rgba(255, 255, 255, 0.22);
 }
 
-.controller.ds4.edit .dpad .face.pressed::after,
-.edit .controller.ds4 .dpad .face.pressed::after {
+.ds4.white .dpad .face.pressed::after {
   opacity: 1;
 }
