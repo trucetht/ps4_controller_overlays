@@ -1,19 +1,17 @@
 /*
-  PS4 Pastel Controller Skin — Version 3
+  PS4 Pastel Controller Skin — Exact Color Version
 
-  Use with:
-  - GamePad Viewer skin: PlayStation 4 (White)
-  - Edit CSS URL: this hosted CSS file
+  Required GamePad Viewer base skin:
+  PlayStation 4 (White)
 
-  Requested colors:
-  - Faceplate base color: #caa9b1
+  Exact requested colors:
+  - Faceplate: #caa9b1
   - Share / Options: #da4f83
   - Thumbsticks: #50e1ff
-  - D-pad: pure white
-  - Triangle / Circle / Square / X: pure white
+  - D-pad: #ffffff
+  - Triangle / Circle / Square / X buttons: #ffffff
 
-  Bumpers and triggers intentionally keep the working PurpleWhite
-  assets and are not recolored.
+  Bumpers and triggers keep the working PurpleWhite assets.
 */
 
 html,
@@ -22,7 +20,7 @@ body {
 }
 
 /* =========================================================
-   CONTROLLER POSITION AND BASE ARTWORK
+   CONTROLLER BASE AND POSITION
    ========================================================= */
 
 .controller.ds4.white {
@@ -42,11 +40,11 @@ body {
 }
 
 /*
-  FACEPLATE: #caa9b1
+  Recolor the white front shell to #caa9b1.
 
-  The source artwork has a white front faceplate. Multiplying the
-  requested color over the original artwork changes white areas to
-  exactly #caa9b1 while retaining the SVG's natural shadows.
+  Multiply makes the white portion of the source artwork become
+  exactly #caa9b1 while preserving its built-in highlights and shadows.
+  The darker rear shell remains darker instead of becoming flat pink.
 */
 .controller.ds4.white::before {
   content: "";
@@ -58,6 +56,7 @@ body {
   height: 598px;
 
   pointer-events: none;
+
   background-color: #caa9b1;
   mix-blend-mode: multiply;
 
@@ -74,7 +73,7 @@ body {
   mask-size: 806px 598px;
 }
 
-/* Keep every input sprite above the faceplate color overlay. */
+/* Keep all controls above the shell color layer. */
 .controller.ds4.white > div {
   z-index: 1;
 }
@@ -83,146 +82,139 @@ body {
    TRIANGLE / CIRCLE / SQUARE / X — PURE WHITE
    ========================================================= */
 
-/*
-  The four front buttons use the .button sprite. The first filter
-  stage converts every visible sprite pixel to black, then invert
-  converts it to pure white. Transparency and sprite positioning
-  remain unchanged.
-*/
-.ds4.white .button {
-  filter:
-    brightness(0)
-    saturate(100%)
-    invert(100%) !important;
-}
-
-/* Keep the buttons white when pressed as well. */
+.ds4.white .button,
 .ds4.white .button.pressed {
-  filter:
-    brightness(0)
-    saturate(100%)
-    invert(100%) !important;
+  background-image:
+    url("https://gamepadviewer.com/ps4-white-assets/face.svgz") !important;
+
+  /*
+    Convert every non-transparent sprite pixel to pure white.
+    This preserves the original sprite dimensions and positions.
+  */
+  filter: brightness(0) invert(1) !important;
 }
 
 /* =========================================================
    D-PAD — PURE WHITE
    ========================================================= */
 
-/*
-  In GamePad Viewer, .face means the four D-pad directions.
-*/
-.ds4.white .face {
+.ds4.white .face,
+.ds4.white .face.pressed {
   background-image:
     url("https://uncleclapton.github.io/GamepadViewer-PurpleWhiteSkin/svgs/dpad.svgz") !important;
 
-  filter:
-    brightness(0)
-    saturate(100%)
-    invert(100%) !important;
-}
-
-.ds4.white .face.pressed {
-  filter:
-    brightness(0)
-    saturate(100%)
-    invert(100%) !important;
+  /*
+    Convert the complete D-pad sprite to pure white while retaining
+    the original up/down/left/right sprite positioning.
+  */
+  filter: brightness(0) invert(1) !important;
 }
 
 /* =========================================================
-   THUMBSTICKS — #50e1ff
+   THUMBSTICKS — EXACTLY #50e1ff
    ========================================================= */
 
 /*
-  This filter first normalizes the entire visible stick sprite to
-  black and then maps it to #50e1ff. That prevents the original
-  purple, gray, and black sprite colors from showing through.
+  Use the working stick SVG as a mask instead of hue-shifting it.
+  The visible stick pixels are therefore filled with the exact
+  requested solid color.
 */
 .ds4.white .stick {
-  background-image:
-    url("https://uncleclapton.github.io/GamepadViewer-PurpleWhiteSkin/svgs/sticks.svgz") !important;
+  background-image: none !important;
+  background-color: #50e1ff !important;
 
-  filter:
-    brightness(0)
-    saturate(100%)
-    invert(80%)
-    sepia(55%)
-    saturate(1720%)
-    hue-rotate(160deg)
-    brightness(102%)
-    contrast(101%) !important;
+  -webkit-mask-image:
+    url("https://uncleclapton.github.io/GamepadViewer-PurpleWhiteSkin/svgs/sticks.svgz");
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: 0 0;
+  -webkit-mask-size: 288px 94px;
+
+  mask-image:
+    url("https://uncleclapton.github.io/GamepadViewer-PurpleWhiteSkin/svgs/sticks.svgz");
+  mask-repeat: no-repeat;
+  mask-position: 0 0;
+  mask-size: 288px 94px;
+
+  filter: none !important;
 }
 
-.ds4.white .stick.pressed {
-  filter:
-    brightness(0)
-    saturate(100%)
-    invert(80%)
-    sepia(55%)
-    saturate(1720%)
-    hue-rotate(160deg)
-    brightness(102%)
-    contrast(101%) !important;
+/* L3 pressed frame. */
+.ds4.white .stick.left.pressed {
+  -webkit-mask-position: -96px 0;
+  mask-position: -96px 0;
+}
+
+/* R3 pressed frame. */
+.ds4.white .stick.right.pressed {
+  -webkit-mask-position: -192px 0;
+  mask-position: -192px 0;
 }
 
 /* =========================================================
-   SHARE / OPTIONS — #da4f83
+   SHARE / OPTIONS — EXACTLY #da4f83
    ========================================================= */
 
 /*
-  GamePad Viewer normally hides these overlay sprites until they
-  are pressed because their unpressed artwork is drawn into the
-  base image. Opacity is forced to 1 so the requested color is
-  visible at all times.
+  The default skin only displays these overlay elements while pressed.
+  Force them visible so their requested color is also visible while idle.
 */
 .ds4.white .back,
-.ds4.white .start {
-  background-image:
-    url("https://uncleclapton.github.io/GamepadViewer-PurpleWhiteSkin/svgs/start.svgz") !important;
-
-  opacity: 1 !important;
-
-  filter:
-    brightness(0)
-    saturate(100%)
-    invert(50%)
-    sepia(100%)
-    saturate(1756%)
-    hue-rotate(305deg)
-    brightness(86%)
-    contrast(98%) !important;
-}
-
+.ds4.white .start,
 .ds4.white .back.pressed,
 .ds4.white .start.pressed {
-  opacity: 1 !important;
+  background-image: none !important;
+  background-color: #da4f83 !important;
 
-  filter:
-    brightness(0)
-    saturate(100%)
-    invert(50%)
-    sepia(100%)
-    saturate(1756%)
-    hue-rotate(305deg)
-    brightness(76%)
-    contrast(108%) !important;
+  opacity: 1 !important;
+  filter: none !important;
+
+  -webkit-mask-image:
+    url("https://uncleclapton.github.io/GamepadViewer-PurpleWhiteSkin/svgs/start.svgz");
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: 56px 46px;
+
+  mask-image:
+    url("https://uncleclapton.github.io/GamepadViewer-PurpleWhiteSkin/svgs/start.svgz");
+  mask-repeat: no-repeat;
+  mask-size: 56px 46px;
+}
+
+/* Share uses the left half of start.svgz. */
+.ds4.white .back,
+.ds4.white .back.pressed {
+  -webkit-mask-position: 0 0;
+  mask-position: 0 0;
+}
+
+/* Options uses the right half of start.svgz. */
+.ds4.white .start,
+.ds4.white .start.pressed {
+  -webkit-mask-position: -28px 0;
+  mask-position: -28px 0;
 }
 
 /* =========================================================
-   BUMPERS AND TRIGGERS — LEAVE UNCHANGED
+   BUMPERS AND TRIGGERS — KEEP CURRENT WORKING COLORS
    ========================================================= */
 
 .ds4.white .bumper {
   background-image:
     url("https://uncleclapton.github.io/GamepadViewer-PurpleWhiteSkin/svgs/bumper.svgz") !important;
+
+  filter: none !important;
 }
 
 .ds4.white .trigger {
   background-image:
     url("https://uncleclapton.github.io/GamepadViewer-PurpleWhiteSkin/svgs/triggers.svgz") !important;
+
+  filter: none !important;
 }
 
-/* Keep the remaining working PurpleWhite assets unchanged. */
+/* Keep the working touchpad pressed asset unchanged. */
 .ds4.white .touchpad.pressed {
   background-image:
     url("https://uncleclapton.github.io/GamepadViewer-PurpleWhiteSkin/svgs/touchpad.svgz") !important;
+
+  filter: none !important;
 }
